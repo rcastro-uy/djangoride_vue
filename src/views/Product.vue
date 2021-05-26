@@ -46,18 +46,23 @@ export default {
         this.getProduct()
     },
     methods: {
-        getProduct() {
+        async getProduct() {
+            this.$store.commit('setLoading', true)
+
             const category_slug = this.$route.params.category_slug
             const product_slug = this.$route.params.product_slug
             // se necesita poner ` en lugar de ' para que funcione el incluir los params con ${param}
-            axios
+            await axios
                 .get(`/api/v1/products/${category_slug}/${product_slug}`)
                 .then(response => {
                     this.product = response.data
+
+                    document.title = this.product.name + ' | DjanGoRide'
                 })
                 .catch (error => {
                     console.log(error)
                 })
+            this.$store.commit('setLoading', false)
         },
         addtoCart() {
             if (isNaN(this.quantity) || this.quantity <1) {
