@@ -30,6 +30,9 @@ export default createStore({
       }
 
       localStorage.setItem('cart', JSON.stringify(state.cart))
+    },
+    setLoading(state, status){
+      state.isLoading = status
     }
   },
   // async func to change
