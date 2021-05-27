@@ -25,7 +25,7 @@
 
                     <div class="field">
                         <div class="control">
-                            <button class="button is-green">Entrar</button>
+                            <button class="button is-green">Iniciar sesión</button>
                         </div>
                     </div>
                     <hr>
