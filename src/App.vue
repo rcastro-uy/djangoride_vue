@@ -60,7 +60,7 @@
                 Log in</router-link
               >
 
-              <router-link to="/carrito" class="button is-success">
+              <router-link to="/cart" class="button is-success">
                 <span class="icon"><i class="fas fa-shopping-cart"></i></span>
                 <span>Carrito ({{ cartTotalLength }})</span>
               </router-link>
