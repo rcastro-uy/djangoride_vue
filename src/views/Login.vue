@@ -30,7 +30,15 @@
                     </div>
                     <hr>
 
-                    Primera vez? <router-link to="/sign-up"> Registrarse! </router-link>
+                    Primera vez? <router-link to="/sign-up"> Registrarse!</router-link>  O inicie sesión con Strava:
+                </form>
+                <br>
+                <form @submit.prevent="loginStrava">
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-black has-background-danger">Iniciar sesión con Strava</button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -40,6 +48,7 @@
 <script>
 import axios from 'axios'
 import { toast } from 'bulma-toast'
+import Pizzly from 'pizzly-js'
 
 export default {
     name: 'Login',
@@ -48,6 +57,7 @@ export default {
             username: '',
             password: '',
             errors: [],
+            userdata:[],
         }
     },
     mounted() {
@@ -83,7 +93,7 @@ export default {
                 .catch(error => {
                     if (error.response) {
                         for (const attribute in error.response.data) {
-                            thhis.errors.push(`${attribute}: ${error.response.data[attribute]}`)
+                            this.errors.push(`${attribute}: ${error.response.data[attribute]}`)
                         }
                     } else {
                         this.errors.push('Ha ocurrido un error. Intente nuevamente')
@@ -91,6 +101,31 @@ export default {
                         console.log(JSON.stringify(error))
                     }
                 })
+        },
+        loginStrava(){
+            const pizzly = new Pizzly({ host: 'djangoride.herokuapp.com'}) // Initialize Pizzly
+            const myAPI = pizzly.integration('strava') // Replace with the API slugname
+            let id = ''
+            myAPI
+            .connect()
+            .then(({ authId }) => this.connectSuccess(myAPI, authId))
+            //.then(this.connectSuccess( { authId } ))
+            .catch(this.connectError);
+
+            
+        },
+        connectSuccess(myAPI, data){
+            console.log('Sucessfully connected!', data)
+            myAPI
+            .auth(data) // Replace with the authId previously obtained
+            .get('/athlete') // Replace with a valid endpoint of the API
+            .then( response => {
+                return response.json()
+            }).then(data => {
+                this.userdata.push(data)
+                console.log(data)
+            } )
+            .catch(console.error)
         }
     }
 }
